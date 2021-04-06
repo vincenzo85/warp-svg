@@ -42,7 +42,18 @@ const dropZone = (callback) => {
   window.addEventListener('drop', (e) => dropEvent(e, e.dataTransfer.files[0]));
 
   loadBtn.addEventListener('click', clickOnLoadInput);
-  loadInput.addEventListener('change', (e) => dropEvent(e, e.target.files[0], (zone) => { zone.classList.toggle('show'); }));
+  loadInput.addEventListener('change', (e) => {
+    const fileListShow = document.getElementById('fileList');
+    dropEvent(e, e.target.files[0], (zone) => { 
+      zone.classList.toggle('show'); 
+    });
+    console.log(e.target.files.length);
+    if(e.target.files.length >= 1) {
+      for(var i = 0; i <= e.target.files.length; i++) {
+        fileListShow.innerHTML += '<li>' + e.target.files[i].name + '</li>'; 
+      }
+    }
+  });
 };
 
 export default dropZone;

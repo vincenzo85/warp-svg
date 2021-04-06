@@ -12,7 +12,7 @@ import toggleControls from "./chunks/toggleControls";
 import changeTheme from "./chunks/changeTheme";
 import iterpritateSmoothness from "./chunks/iterpritateSmoothness";
 import loader from "./chunks/loader";
-
+import {getControlPoint} from "./utils";
 import { testSVG } from "./chunks/svg-test-string";
 
 /// /////////////////////////////////////////////////////////////////
@@ -27,7 +27,6 @@ gsap.registerPlugin(Draggable);
 let svgString = testSVG;
 let zoom = 1;
 const draggableControlPonts = [];
-
 const app = document.getElementById("app");
 const svgContainer = document.getElementById("svg-container");
 const svgElement = document.getElementById("svg-element");
@@ -38,6 +37,8 @@ const actions = {
   meshComplexity: document.getElementById("mesh-complexity"),
   meshInterpolation: document.getElementById("interpolation-complexity"),
   showOriginalBox: document.getElementById("show-original-box-btn"),
+  saveControlPoint: document.getElementById("save-control-point"),
+  changeImagePlaceholder: document.getElementsByClassName('change-parts'),
 };
 
 let width = svgContainer.clientWidth;
@@ -74,12 +75,19 @@ function parseSVGString(svgString) {
 
   svgElement.setAttribute("preserveAspectRatio", "xMidYMin meet");
   svgElement.innerHTML = svgDOM.innerHTML.toString();
+  var svgPolygonEl = svgElement.querySelectorAll('polygon');
+  if(svgPolygonEl.length > 0) {
+    for (let i = 0; i < svgPolygonEl.length; i++) {
+      svgPolygonEl[i].remove();
+    }
+  }
+  console.log(svgElement);
 }
 
 /// /////////////////////////////////////////////////////////////////
 /// ///////////////////// Initial function //////////////////////////
 /// /////////////////////////////////////////////////////////////////
-function init(firstInit = false) {
+function init(firstInit = false, cPoint, isMultiple = false) {
   const controlPath = document.getElementById("control-path");
   parseSVGString(svgString);
   zoomElement.style.transform = "scale(1)";
@@ -88,8 +96,6 @@ function init(firstInit = false) {
   // Need to interpolate first, so angles remain sharp
   const warp = new Warp(svgElement);
   warp.interpolate(interpolationLevel);
-
-  // Start with a rectangle, then distort it later
   let controlPoints = generateMeshPoints(
     width,
     height,
@@ -151,7 +157,6 @@ function init(firstInit = false) {
       nx += W[i] * V[i][0];
       ny += W[i] * V[i][1];
     }
-
     return [nx, ny, ...W];
   }
 
@@ -188,7 +193,6 @@ function init(firstInit = false) {
           (this.pointerX - svgControl.getBoundingClientRect().left) / zoom;
         const relativeY =
           (this.pointerY - svgControl.getBoundingClientRect().top) / zoom;
-
         controlPoints[index] = [relativeX, relativeY];
         drawControlShape();
         warp.transform(reposition);
@@ -203,7 +207,7 @@ function init(firstInit = false) {
       return null;
     });
   }
-
+  
   // if this is the first launch
   if (firstInit) {
     controlPoints = [
@@ -221,12 +225,15 @@ function init(firstInit = false) {
       [80, -90],
     ];
   }
+
+  if (typeof cPoint != "undefined" || cPoint != null) {
+    controlPoints = cPoint
+  }
   drawControlShape();
   drawControlPoints();
   warp.transform(reposition);
 }
 
-/// //////
 const createNewControlPath = () => {
   svgControl.innerHTML = "";
   const newControlPath = document.createElementNS(
@@ -237,14 +244,12 @@ const createNewControlPath = () => {
   svgControl.appendChild(newControlPath);
 };
 
-/// //////
 dropZone((result) => {
   svgString = result;
   createNewControlPath();
   init();
 });
 
-/// ////
 document.addEventListener("wheel", function (e) {
   const controlPath = document.getElementById("control-path");
   if (e.deltaY > 0) {
@@ -262,7 +267,6 @@ document.addEventListener("wheel", function (e) {
   });
 });
 
-/// //////
 actions.meshComplexity.addEventListener(
   "change",
   (e) => {
@@ -273,7 +277,6 @@ actions.meshComplexity.addEventListener(
   false
 );
 
-/// /////
 actions.showOriginalBox.addEventListener(
   "change",
   () => {
@@ -283,7 +286,6 @@ actions.showOriginalBox.addEventListener(
   false
 );
 
-// /////
 actions.meshInterpolation.addEventListener(
   "change",
   (e) => {
@@ -293,6 +295,37 @@ actions.meshInterpolation.addEventListener(
   },
   false
 );
+
+actions.saveControlPoint.addEventListener(
+  "click",
+  (e) => {
+    const controlsPoint = getControlPoint();
+    console.log(controlsPoint);
+    const files = document.getElementById('load-svg-input').files;
+    //for( var i = 0; i <= files.length; i++) {
+    //  const reader = new FileReader();
+    //  
+    //  reader.onload = function () {
+    //    svgString = reader.result;
+    //    init(false, controlsPoint, true);
+    //  };
+//
+    //  reader.readAsBinaryString(files[i]);
+    //}
+  },
+  false
+);
+
+for(var i = 0; i < actions.changeImagePlaceholder.length; i++) {
+  actions.changeImagePlaceholder[i].addEventListener(
+    "click",
+    (e) => {
+      svgContainer.className = "";
+      svgContainer.classList.add(e.target.dataset.part); 
+    },
+    false
+  )
+}
 
 // Initial calling
 changeTheme();

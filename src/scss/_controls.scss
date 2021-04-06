@@ -11,6 +11,10 @@
   a {
     color: var(--main-clr);
   }
+
+  &-files {
+    margin: 20px 0;
+  }
 }
 
 .content-block {
@@ -284,4 +288,12 @@
       }
     }
   }
+}
+
+#parts {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  right: 0;
+  top: 83px;
 }

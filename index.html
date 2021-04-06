@@ -97,6 +97,10 @@
             </svg>
             <span>Issues</span>
           </a>
+          <div class="actions-files">
+            <h3>Multiple FIles:</h3>
+              <div id="fileList"></div>
+          </div>
         </div>
       </div>
 
@@ -130,14 +134,30 @@
         <button id="load-svg-btn" type="file" multiple="false" accept="image/svg" class="secondary-btn">
           Load SVG
         </button>
-        <input id="load-svg-input" type="file" value="upload" />
+        <input id="load-svg-input" type="file" value="upload" multiple />
         <button id="save-result-btn" class="primary-btn">
           Save Result
+        </button>
+        <button id="save-control-point" class="primary-btn">
+          Apply at all
         </button>
       </div>
     </div>
 
-    <div id="scale-wrap">
+    <div id="parts">
+      <button data-part="arm-right-front" class="primary-btn change-parts">Braccio Destro Fronte</button>
+      <button data-part="arm-left-front" class="primary-btn change-parts">Braccio Sinistro Fronte</button>
+      <button data-part="arm-right-back" class="primary-btn change-parts">Braccio Destro Dietro</button>
+      <button data-part="arm-left-back" class="primary-btn change-parts">Braccio Sinistro Dietro</button>
+      <button data-part="belly-front" class="primary-btn change-parts">Busto Fronte</button>
+      <button data-part="belly-back" class="primary-btn change-parts">Busto Dietro</button>
+      <button data-part="leg-right-front" class="primary-btn change-parts">Gamba Destra Fronte</button>
+      <button data-part="leg-left-front" class="primary-btn change-parts">Gamba Sinistra Fronte</button>
+      <button data-part="leg-right-back" class="primary-btn change-parts">Gamba Destra Dietro</button>
+      <button data-part="leg-left-back" class="primary-btn change-parts">Gamba Sinistra Dietro</button>
+    </div>
+
+    <div id="scale-wrap" class="parts">
       <div id="svg-container" style="width: 500px; height: 500px;">
         <svg id="svg-control">
           <path id="control-path" />

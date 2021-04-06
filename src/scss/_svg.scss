@@ -7,6 +7,22 @@
 #svg-container {
   position: relative;
   background-color: var(--background-clr);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.parts {
+  .arm-right-front { background-image: url('./../images/parts/BraccioDestro_Front.png');}
+  .arm-left-front { background-image: url('./../images/parts/BraccioSinistro_Front\ \(2\).png');}
+  .arm-right-back { background-image: url('./../images/parts/BraccioDestro_Back.png');}
+  .arm-left-back { background-image: url('./../images/parts/BraccioSinistro_Back\ \(1\).png');}
+  .belly-front { background-image: url('./../images/parts/Tuta_Front.png');}
+  .belly-back { background-image: url('./../images/parts/Tuta_Back.png');}
+  .leg-right-front { background-image: url('./../images/parts/GambaDestra_Front.png');}
+  .leg-left-front { background-image: url('./../images/parts/GambaSinistra_Front.png');}
+  .leg-right-back { background-image: url('./../images/parts/GambaDestra_Back.png');}
+  .leg-left-back { background-image: url('./../images/parts/GambaSinistra_Back.png');}
 }
 
 #svg-control {
